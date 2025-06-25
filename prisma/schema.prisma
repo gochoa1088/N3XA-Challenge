@@ -13,3 +13,36 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model Ticket {
+  id        String     @id @default(cuid())
+  name      String?
+  issue     String?
+  category  String?
+  status    TicketStatus @default(OPEN)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  messages  Message[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  ticketId  String
+  role      Role
+  content   String
+  createdAt DateTime @default(now())
+
+  ticket    Ticket   @relation(fields: [ticketId], references: [id])
+}
+
+enum Role {
+  user
+  assistant
+}
+
+enum TicketStatus {
+  OPEN
+  SUBMITTED
+  CLOSED
+}
