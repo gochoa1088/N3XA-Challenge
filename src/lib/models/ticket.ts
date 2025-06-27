@@ -3,7 +3,12 @@ import { Role, TicketStatus } from "../../generated/prisma/client";
 
 export class Ticket {
   static async add() {
-    return prisma.ticket.create({ data: {} });
+    return prisma.ticket.create({
+      data: {},
+      include: {
+        messages: true,
+      },
+    });
   }
 
   static async get(id: string) {
