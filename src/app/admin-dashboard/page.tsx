@@ -19,7 +19,7 @@ const TicketReviewPage = () => {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/tickets");
+      const res = await fetch("/api/tickets/review");
       const data = await res.json();
       setTickets(data.tickets || []);
     } catch {
@@ -44,7 +44,7 @@ const TicketReviewPage = () => {
             Manage and review support tickets from customers in real-time.
           </p>
         </div>
-        <div className="p-4 w-full flex-1 flex flex-col rounded-2xl bg-white/5 shadow-lg border border-white/[.10] sm:pt-6 min-h-[400px] max-h-full overflow-hidden">
+        <div className="p-4 overflow-y-scroll w-full flex-1 flex flex-col rounded-2xl bg-white/5 shadow-lg border border-white/[.10] sm:pt-6 min-h-[400px] max-h-full overflow-hidden">
           <h2 className="text-xl font-semibold  mb-6">Recent Tickets</h2>
 
           {loading ? (

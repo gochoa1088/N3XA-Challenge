@@ -76,4 +76,13 @@ export class Ticket {
       orderBy: { createdAt: "desc" },
     });
   }
+
+  static async listByStatuses(statuses: TicketStatus[]) {
+    return prisma.ticket.findMany({
+      where: {
+        status: { in: statuses },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  }
 }

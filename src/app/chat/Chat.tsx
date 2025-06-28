@@ -111,7 +111,7 @@ export default function Chat({ ticketId }: ChatProps) {
       <div className="w-full flex-1 flex flex-col rounded-2xl bg-white/5 shadow-lg border border-white/[.10]  max-h-full overflow-hidden h-full">
         <div
           ref={chatRef}
-          className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-700 min-h-0 h-full"
+          className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0 h-full"
         >
           {loading ? (
             <div className="text-center h-full text-muted-foreground py-8 flex-1 flex items-center justify-center">
