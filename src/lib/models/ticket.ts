@@ -70,4 +70,10 @@ export class Ticket {
       orderBy: { createdAt: "desc" },
     });
   }
+
+  static async list() {
+    return prisma.ticket.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+  }
 }
