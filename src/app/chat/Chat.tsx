@@ -97,15 +97,17 @@ export default function Chat({ ticketId }: ChatProps) {
 
   return (
     <div className="w-full max-w-4xl flex flex-col gap-8 flex-1 min-h-0 h-full">
-      <div className="w-full flex flex-col items-center gap-4 mb-2">
-        <h1 className="text-2xl sm:text-3xl font-bold text-center">
-          Welcome to N3XA Support
-        </h1>
-        <p className="text-muted-foreground text-gray-300 text-center">
-          Get help with your issues and create support tickets by chatting with
-          our AI assistant.
-        </p>
-      </div>
+      {!ticketId && (
+        <div className="w-full flex flex-col items-center gap-4 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-center">
+            Welcome to N3XA Support
+          </h1>
+          <p className="text-muted-foreground text-gray-300 text-center">
+            Get help with your issues and create support tickets by chatting
+            with our AI assistant.
+          </p>
+        </div>
+      )}
       <div className="w-full flex-1 flex flex-col rounded-2xl bg-white/5 shadow-lg border border-white/[.10]  max-h-full overflow-hidden h-full">
         <div
           ref={chatRef}
