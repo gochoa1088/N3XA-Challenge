@@ -52,7 +52,7 @@ export default function RootLayout({
               </div>
             </div>
           </nav>
-          <main className="max-w-5xl mx-auto">{children}</main>
+          <main className="mx-auto">{children}</main>
         </body>
       </ReactQueryProvider>
     </html>

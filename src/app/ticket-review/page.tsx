@@ -34,7 +34,7 @@ const TicketReviewPage = () => {
   }, []);
 
   return (
-    <div className="h-[calc(100vh-96px)] bg-background flex flex-col w-full items-center px-2 py-8">
+    <div className="h-[calc(100vh-96px)] bg-background flex flex-col w-full items-center p-4">
       <div className="w-full max-w-4xl flex flex-col gap-8 flex-1 min-h-0">
         <div className="w-full flex flex-col items-center gap-4 mb-2">
           <h1 className="text-2xl sm:text-3xl font-bold text-center">
