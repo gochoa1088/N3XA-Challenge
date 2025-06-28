@@ -12,6 +12,7 @@ type Message = {
 
 export default function EndUserPage() {
   const chatRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
 
@@ -55,6 +56,9 @@ export default function EndUserPage() {
       top: chatRef.current.scrollHeight,
       behavior: "smooth",
     });
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   }, [messages]);
 
   return (
@@ -121,9 +125,11 @@ export default function EndUserPage() {
 
           <div className="flex gap-2 items-center border-t border-white/[.10] bg-black/30 px-3 py-3">
             <input
+              ref={inputRef}
               type="text"
               placeholder="Type your message..."
               value={input}
+              autoFocus
               onChange={(e) => setInput(e.target.value)}
               disabled={isPending}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}

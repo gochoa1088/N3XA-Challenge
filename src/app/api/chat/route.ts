@@ -3,10 +3,40 @@ import { NextRequest, NextResponse } from "next/server";
 import { Message } from "@/lib/models/message";
 import { Ticket } from "@/lib/models/ticket";
 import { Role } from "../../../generated/prisma/client";
+import OpenAI from "openai";
 
-function extractContent(messages: { role: string; content: string }[]) {
-  return messages.map((m) => m.content.toLowerCase());
-}
+const openai = new OpenAI({ apiKey: process.env.OPEN_AI_API_KEY });
+
+const SYSTEM_PROMPT = `
+You are an AI assistant helping users submit support tickets.
+Your goal is to gather:
+1. Their full name
+2. A detailed description of the issue
+3. The category of the issue (suggest one if unclear)
+
+Only ask one question at a time. When all information is collected, call the submit_ticket function with the user's name, issue, and category.
+
+Keep responses friendly and conversational.
+`;
+
+const SYSTEM_FUNCTIONS = [
+  {
+    name: "submit_ticket",
+    description: "Submit a support ticket with user info",
+    parameters: {
+      type: "object",
+      properties: {
+        name: { type: "string", description: "The user's full name" },
+        issue: {
+          type: "string",
+          description: "A detailed description of the issue",
+        },
+        category: { type: "string", description: "The issue category" },
+      },
+      required: ["name", "issue", "category"],
+    },
+  },
+];
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,48 +48,55 @@ export async function POST(req: NextRequest) {
     }
 
     let ticket = await Ticket.findOpen();
-    console.log("ticket", ticket);
     if (!ticket) ticket = await Ticket.add();
 
     await Message.add(ticket.id, Role.user, userMessage);
 
     const messages = await Message.list(ticket.id);
-    const history = extractContent(messages);
-    const alreadyAsked = (str: string) => history.some((c) => c.includes(str));
 
-    // Mock assistant reply
-    let assistantReply = "";
-    if (!alreadyAsked("your full name")) {
-      assistantReply = "Sure! Let's get started. What's your full name?";
-    } else if (!alreadyAsked("issue") && alreadyAsked("name")) {
-      assistantReply =
-        "Got it. Can you describe the issue you're experiencing?";
-    } else if (!alreadyAsked("category") && alreadyAsked("issue")) {
-      assistantReply =
-        "Thanks. What category best fits this issue? (e.g. Login, Billing, Tech)";
-    } else {
-      assistantReply =
-        "Thank you! Your support ticket has been submitted. Our team will reach out soon.";
+    // Prepare messages for OpenAI
+    const openaiMessages: {
+      role: "system" | "user" | "assistant";
+      content: string;
+    }[] = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...messages.map((m) => ({
+        role: m.role === Role.user ? ("user" as const) : ("assistant" as const),
+        content: m.content,
+      })),
+    ];
 
-      const name = messages.find(
-        (m) => m.role === Role.user && m.content.split(" ").length > 1
-      )?.content;
-      const issue = messages.find((m) =>
-        m.content.toLowerCase().includes("issue")
-      )?.content;
-      const category = messages.find(
-        (m) =>
-          m.content.toLowerCase().includes("login") ||
-          m.content.toLowerCase().includes("billing") ||
-          m.content.toLowerCase().includes("tech")
-      )?.content;
+    // Call OpenAI API with function calling
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo-1106",
+      messages: openaiMessages,
+      functions: SYSTEM_FUNCTIONS,
+      function_call: "auto",
+      max_tokens: 200,
+      temperature: 0.7,
+    });
 
-      await Ticket.update(ticket.id, {
-        name: name || "Unknown",
-        issue: issue || "Not provided",
-        category: category || "Uncategorized",
-        status: "SUBMITTED",
-      });
+    const choice = completion.choices[0];
+    let assistantReply = choice.message.content || "";
+
+    // If function_call is present, parse and update ticket
+    if (
+      choice.message.function_call &&
+      choice.message.function_call.name === "submit_ticket"
+    ) {
+      try {
+        const args = JSON.parse(choice.message.function_call.arguments || "{}");
+        await Ticket.update(ticket.id, {
+          name: args.name,
+          issue: args.issue,
+          category: args.category,
+          status: "SUBMITTED",
+        });
+        assistantReply = "Thanks, I have submitted your ticket.";
+      } catch {
+        // fallback: show error or continue
+        assistantReply = "Sorry, there was an error submitting your ticket.";
+      }
     }
 
     await Message.add(ticket.id, Role.assistant, assistantReply);
