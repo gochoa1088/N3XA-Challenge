@@ -91,12 +91,14 @@ const TicketReviewPage = () => {
                     <span className="font-semibold">Issue:</span>{" "}
                     {ticket.issue || "-"}
                   </div>
-                  <div className="text-sm text-white/80">
-                    <span className="font-semibold">Category:</span>{" "}
-                    {ticket.category || "-"}
-                  </div>
-                  <div className="text-xs text-white/40 mt-1">
-                    Created: {new Date(ticket.createdAt).toLocaleString()}
+                  <div className="flex gap-1 items-center justify-between">
+                    <div className="text-sm text-white/80">
+                      <span className="font-semibold">Category:</span>{" "}
+                      {ticket.category || "-"}
+                    </div>
+                    <div className="text-xs text-white/40 mt-1">
+                      Created: {new Date(ticket.createdAt).toLocaleString()}
+                    </div>
                   </div>
                 </li>
               ))}

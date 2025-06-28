@@ -39,6 +39,7 @@ model Message {
 enum Role {
   user
   assistant
+  admin
 }
 
 enum TicketStatus {

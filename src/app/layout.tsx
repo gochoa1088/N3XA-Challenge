@@ -44,7 +44,7 @@ export default function RootLayout({
                   Support Chat
                 </Link>
                 <Link
-                  href="/admin-dashboard"
+                  href="/admin"
                   className="rounded-full border border-solid border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#1a1a1a] hover:border-transparent font-medium h-9 sm:h-10 px-4 sm:px-5"
                 >
                   Admin Dashboard
