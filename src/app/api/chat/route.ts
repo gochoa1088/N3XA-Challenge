@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
     }
 
     let ticket = await Ticket.findOpen();
+    console.log("ticket", ticket);
     if (!ticket) ticket = await Ticket.add();
 
     await Message.add(ticket.id, Role.user, userMessage);
@@ -28,7 +29,7 @@ export async function POST(req: NextRequest) {
 
     // Mock assistant reply
     let assistantReply = "";
-    if (!alreadyAsked("your name")) {
+    if (!alreadyAsked("your full name")) {
       assistantReply = "Sure! Let's get started. What's your full name?";
     } else if (!alreadyAsked("issue") && alreadyAsked("name")) {
       assistantReply =

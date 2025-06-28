@@ -12,12 +12,12 @@ const page = () => {
         </div>
 
         <div className="w-full flex-1 flex flex-col">
-          <div className="border border-black/[.08] dark:border-white/[.145] rounded-lg p-6 bg-background flex-1 overflow-y-auto min-h-0">
+          <div className="border border-white/[.145] rounded-lg p-6 bg-background flex-1 overflow-y-auto min-h-0">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold font-[family-name:var(--font-geist-mono)]">
                 Recent Tickets
               </h2>
-              <button className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-9 sm:h-10 px-4 sm:px-5">
+              <button className="rounded-full border border-solid border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-9 sm:h-10 px-4 sm:px-5">
                 Refresh
               </button>
             </div>
