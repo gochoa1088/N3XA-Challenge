@@ -74,12 +74,6 @@ export default function EndUserPage() {
             ref={chatRef}
             className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-700 min-h-0"
           >
-            {isPending && (
-              <div className="text-center text-muted-foreground py-8">
-                <p>Loading conversation...</p>
-              </div>
-            )}
-
             {messages.length === 0 && (
               <div className="text-center h-full text-muted-foreground py-8 flex-1 flex items-center justify-center">
                 <div className="flex flex-col items-center gap-4">
@@ -107,8 +101,20 @@ export default function EndUserPage() {
             ))}
 
             {isPending && (
-              <div className="mr-auto bg-gray-100 text-muted-foreground px-4 py-3 rounded-2xl text-base shadow-sm">
-                Assistant is typing...
+              <div className="max-w-[60%] w-fit px-4 py-2 rounded-2xl shadow-sm text-base break-words mr-auto text-gray-500 border border-white/[.10] rounded-bl-sm">
+                <span className="mr-1">Assistant is typing</span>
+                <span
+                  className="mr-0.5 inline-block w-1 h-1 bg-gray-500 rounded-full animate-bounce"
+                  style={{ animationDelay: "0s" }}
+                ></span>
+                <span
+                  className="mr-0.5 inline-block w-1 h-1 bg-gray-500 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.2s" }}
+                ></span>
+                <span
+                  className="inline-block w-1 h-1 bg-gray-500 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.4s" }}
+                ></span>
               </div>
             )}
           </div>
