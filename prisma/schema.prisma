@@ -33,7 +33,7 @@ model Message {
   content   String
   createdAt DateTime @default(now())
 
-  ticket    Ticket   @relation(fields: [ticketId], references: [id])
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
 }
 
 enum Role {
