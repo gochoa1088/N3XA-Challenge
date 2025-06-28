@@ -41,13 +41,13 @@ export default function RootLayout({
                   href="/chat"
                   className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#ccc] font-medium h-9 sm:h-10 px-4 sm:px-5"
                 >
-                  End User Chat
+                  Support Chat
                 </Link>
                 <Link
-                  href="/ticket-review"
+                  href="/admin-dashboard"
                   className="rounded-full border border-solid border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#1a1a1a] hover:border-transparent font-medium h-9 sm:h-10 px-4 sm:px-5"
                 >
-                  Support Dashboard
+                  Admin Dashboard
                 </Link>
               </div>
             </div>

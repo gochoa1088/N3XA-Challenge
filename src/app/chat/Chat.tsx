@@ -106,7 +106,7 @@ export default function Chat({ ticketId }: ChatProps) {
           our AI assistant.
         </p>
       </div>
-      <div className="w-full flex-1 flex flex-col rounded-2xl bg-white/5 shadow-lg border border-white/[.10] p-0 sm:pt-6 max-h-full overflow-hidden h-full">
+      <div className="w-full flex-1 flex flex-col rounded-2xl bg-white/5 shadow-lg border border-white/[.10]  max-h-full overflow-hidden h-full">
         <div
           ref={chatRef}
           className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-700 min-h-0 h-full"
