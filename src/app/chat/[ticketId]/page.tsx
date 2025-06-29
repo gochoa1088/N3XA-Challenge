@@ -1,4 +1,4 @@
-import Chat from "../Chat";
+import Chat from "../../../lib/components/Chat/Chat";
 
 export default async function TicketChatPage({
   params,
