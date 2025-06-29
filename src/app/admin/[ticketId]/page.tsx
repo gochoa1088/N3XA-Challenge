@@ -88,20 +88,10 @@ const TicketDetailPage = ({
             <h1 className="text-2xl sm:text-3xl font-bold text-center">
               Ticket #{ticket.id.slice(0, 8)}
             </h1>
-            {ticket.status !== "CLOSED" && (
-              <button
-                onClick={() => closeTicketMutation.mutate()}
-                disabled={closeTicketMutation.isPending}
-                className="px-4 py-2 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-              >
-                <X className="w-4 h-4" />
-                {closeTicketMutation.isPending ? "Closing..." : "Close Ticket"}
-              </button>
-            )}
           </div>
 
           <div className="w-full p-4 rounded-2xl bg-white/5 shadow-lg border border-white/[.10]">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
               <div>
                 <span className="font-semibold text-white/90">Customer:</span>{" "}
                 <span className="text-white/80">
@@ -134,10 +124,22 @@ const TicketDetailPage = ({
                   {new Date(ticket.createdAt).toLocaleString()}
                 </span>
               </div>
-            </div>
-            <div className="mt-4">
-              <span className="font-semibold text-white/90">Issue:</span>{" "}
-              <span className="text-white/80">{ticket.issue || "-"}</span>
+              <div>
+                <span className="font-semibold text-white/90">Issue:</span>{" "}
+                <span className="text-white/80">{ticket.issue || "-"}</span>
+              </div>
+              {ticket.status !== "CLOSED" && (
+                <button
+                  onClick={() => closeTicketMutation.mutate()}
+                  disabled={closeTicketMutation.isPending}
+                  className="w-fit cursor-pointer rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-red-200 font-medium h-9 sm:h-10 px-4 sm:px-5"
+                >
+                  <X className="w-4 h-4" />
+                  {closeTicketMutation.isPending
+                    ? "Closing..."
+                    : "Close Ticket"}
+                </button>
+              )}
             </div>
           </div>
 
