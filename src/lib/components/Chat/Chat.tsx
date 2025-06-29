@@ -68,16 +68,13 @@ export default function Chat({ ticketId, isAdmin = false }: ChatProps) {
   const sendUserMessageMutation = useMutation({
     mutationFn: (content: string) => sendUserMessage(ticketId, content),
     onMutate: async (content) => {
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: ["messages", ticketId] });
 
-      // Snapshot the previous value
       const previousMessages = queryClient.getQueryData<Message[]>([
         "messages",
         ticketId,
       ]);
 
-      // Optimistically update to show user message immediately
       const optimisticUserMessage: Message = {
         id: crypto.randomUUID(),
         role: "user",
@@ -93,7 +90,6 @@ export default function Chat({ ticketId, isAdmin = false }: ChatProps) {
       return { previousMessages };
     },
     onError: (err, content, context) => {
-      // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousMessages) {
         queryClient.setQueryData(
           ["messages", ticketId],
@@ -102,8 +98,6 @@ export default function Chat({ ticketId, isAdmin = false }: ChatProps) {
       }
     },
     onSuccess: () => {
-      // The AI response is already handled by the server and will be included
-      // when we refetch the messages, so we just invalidate to get the latest
       queryClient.invalidateQueries({ queryKey: ["messages", ticketId] });
     },
   });
@@ -142,7 +136,6 @@ export default function Chat({ ticketId, isAdmin = false }: ChatProps) {
 
   return (
     <div className="w-full max-w-4xl flex flex-col gap-8 flex-1 min-h-0 h-full">
-      {/* Welcome message for end-user mode */}
       {!ticketId && !isAdmin && (
         <div className="w-full flex flex-col items-center gap-4 mb-2">
           <h1 className="text-2xl sm:text-3xl font-bold text-center">
@@ -155,7 +148,6 @@ export default function Chat({ ticketId, isAdmin = false }: ChatProps) {
         </div>
       )}
 
-      {/* Chat Area */}
       <div className="w-full flex-1 flex flex-col rounded-2xl bg-white/5 shadow-lg border border-white/[.10] max-h-full overflow-hidden h-full">
         <div
           ref={chatRef}

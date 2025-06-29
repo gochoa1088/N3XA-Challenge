@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const { ticketId } = await params;
-    const ticket = await Ticket.getWithMessages(ticketId);
+    const ticket = await Ticket.get(ticketId);
     if (!ticket) {
       return NextResponse.json({ error: "Ticket not found" }, { status: 404 });
     }

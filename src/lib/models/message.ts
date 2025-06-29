@@ -18,30 +18,4 @@ export class Message {
       orderBy: { createdAt: "asc" },
     });
   }
-
-  static async get(id: string) {
-    return prisma.message.findUnique({
-      where: { id },
-    });
-  }
-
-  static async delete(id: string) {
-    return prisma.message.delete({
-      where: { id },
-    });
-  }
-
-  // Optional: create many messages at once
-  static async bulkAdd(
-    ticketId: string,
-    messages: { role: Role; content: string }[]
-  ) {
-    return prisma.message.createMany({
-      data: messages.map((m) => ({
-        ticketId,
-        role: m.role,
-        content: m.content,
-      })),
-    });
-  }
 }

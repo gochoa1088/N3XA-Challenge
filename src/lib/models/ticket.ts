@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { Role, TicketStatus } from "../../generated/prisma/client";
+import { TicketStatus } from "../../generated/prisma/client";
 
 export class Ticket {
   static async add() {
@@ -14,6 +14,11 @@ export class Ticket {
   static async get(id: string) {
     return prisma.ticket.findUnique({
       where: { id },
+      include: {
+        messages: {
+          orderBy: { createdAt: "asc" },
+        },
+      },
     });
   }
 
@@ -32,27 +37,6 @@ export class Ticket {
     });
   }
 
-  static async addMessage(ticketId: string, role: Role, content: string) {
-    return prisma.message.create({
-      data: {
-        ticketId,
-        role,
-        content,
-      },
-    });
-  }
-
-  static async getWithMessages(id: string) {
-    return prisma.ticket.findUnique({
-      where: { id },
-      include: {
-        messages: {
-          orderBy: { createdAt: "asc" },
-        },
-      },
-    });
-  }
-
   static async findOpen() {
     return prisma.ticket.findFirst({
       where: { status: "OPEN" },
@@ -61,13 +45,6 @@ export class Ticket {
           orderBy: { createdAt: "asc" },
         },
       },
-    });
-  }
-
-  static async listSubmitted() {
-    return prisma.ticket.findMany({
-      where: { status: "SUBMITTED" },
-      orderBy: { createdAt: "desc" },
     });
   }
 

@@ -3,22 +3,9 @@ import React, { use } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import Link from "next/link";
-import Chat from "../../../lib/components/Chat/Chat";
-
-interface Ticket {
-  id: string;
-  name?: string;
-  issue?: string;
-  category?: string;
-  status: string;
-  createdAt: string;
-  messages: {
-    id: string;
-    role: "user" | "assistant" | "admin";
-    content: string;
-    createdAt: string;
-  }[];
-}
+import Chat from "@/lib/components/Chat/Chat";
+import { Ticket } from "./types";
+import { closeTicket, getTicket } from "./utils";
 
 const TicketDetailPage = ({
   params,
@@ -28,34 +15,17 @@ const TicketDetailPage = ({
   const { ticketId } = use(params);
   const queryClient = useQueryClient();
 
-  // Fetch ticket data
   const {
     data: ticket,
     isLoading,
     error,
   } = useQuery({
     queryKey: ["ticket", ticketId],
-    queryFn: async (): Promise<Ticket> => {
-      const res = await fetch(`/api/tickets/${ticketId}`);
-      const data = await res.json();
-      if (!data.ticket) {
-        throw new Error("Ticket not found");
-      }
-      return data.ticket;
-    },
+    queryFn: () => getTicket(ticketId),
   });
 
-  // Close ticket mutation
   const closeTicketMutation = useMutation({
-    mutationFn: async () => {
-      const res = await fetch(`/api/tickets/${ticketId}/close`, {
-        method: "POST",
-      });
-      if (!res.ok) {
-        throw new Error("Failed to close ticket");
-      }
-      return res.json();
-    },
+    mutationFn: () => closeTicket(ticketId),
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["ticket", ticketId] });
 
@@ -106,7 +76,6 @@ const TicketDetailPage = ({
     <div className="h-[calc(100vh-96px)] w-full flex flex-row items-stretch bg-background">
       <main className="flex-1 p-4 flex flex-col items-center h-full min-h-0">
         <div className="w-full max-w-4xl flex flex-col gap-6 flex-1 min-h-0">
-          {/* Header */}
           <div className="w-full flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <Link
@@ -131,7 +100,6 @@ const TicketDetailPage = ({
             )}
           </div>
 
-          {/* Ticket Info */}
           <div className="w-full p-4 rounded-2xl bg-white/5 shadow-lg border border-white/[.10]">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -173,12 +141,10 @@ const TicketDetailPage = ({
             </div>
           </div>
 
-          {/* Chat Component */}
           <div className="flex-1 min-h-0">
             <Chat ticketId={ticketId} isAdmin={true} />
           </div>
 
-          {/* Closed ticket message */}
           {ticket.status === "CLOSED" && (
             <div className="text-center text-green-400 font-semibold py-2">
               This ticket has been closed
